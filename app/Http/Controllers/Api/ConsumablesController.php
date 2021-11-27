@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Consumable;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\ImageUploadRequest;
 
 class ConsumablesController extends Controller
 {
@@ -24,6 +25,26 @@ class ConsumablesController extends Controller
     public function index(Request $request)
     {
         $this->authorize('index', Consumable::class);
+
+        // This array is what determines which fields should be allowed to be sorted on ON the table itself, no relations
+        // Relations will be handled in query scopes a little further down.
+        $allowed_columns = 
+            [
+                'id',
+                'name',
+                'order_number',
+                'min_amt',
+                'purchase_date',
+                'purchase_cost',
+                'company',
+                'category',
+                'model_number', 
+                'item_no', 
+                'qty',
+                'image',
+                ];
+
+
         $consumables = Company::scopeCompanyables(
             Consumable::select('consumables.*')
                 ->with('company', 'location', 'category', 'users', 'manufacturer')
@@ -41,8 +62,16 @@ class ConsumablesController extends Controller
             $consumables->where('category_id','=',$request->input('category_id'));
         }
 
+        if ($request->filled('model_number')) {
+            $consumables->where('model_number','=',$request->input('model_number'));
+        }
+
         if ($request->filled('manufacturer_id')) {
             $consumables->where('manufacturer_id','=',$request->input('manufacturer_id'));
+        }
+
+        if ($request->filled('location_id')) {
+            $consumables->where('location_id','=',$request->input('location_id'));
         }
 
 
@@ -53,12 +82,14 @@ class ConsumablesController extends Controller
         // Check to make sure the limit is not higher than the max allowed
         ((config('app.max_results') >= $request->input('limit')) && ($request->filled('limit'))) ? $limit = $request->input('limit') : $limit = config('app.max_results');
 
-        $allowed_columns = ['id','name','order_number','min_amt','purchase_date','purchase_cost','company','category','model_number', 'item_no', 'manufacturer','location','qty','image'];
+        
         $order = $request->input('order') === 'asc' ? 'asc' : 'desc';
-        $sort = in_array($request->input('sort'), $allowed_columns) ? $request->input('sort') : 'created_at';
+
+        $sort_override =  $request->input('sort');
+        $column_sort = in_array($sort_override, $allowed_columns) ? $sort_override : 'created_at';
 
 
-        switch ($sort) {
+        switch ($sort_override) {
             case 'category':
                 $consumables = $consumables->OrderCategory($order);
                 break;
@@ -72,7 +103,7 @@ class ConsumablesController extends Controller
                 $consumables = $consumables->OrderCompany($order);
                 break;
             default:
-                $consumables = $consumables->orderBy($sort, $order);
+                $consumables = $consumables->orderBy($column_sort, $order);
                 break;
         }
 
@@ -90,14 +121,15 @@ class ConsumablesController extends Controller
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
      * @since [v4.0]
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\ImageUploadRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ImageUploadRequest $request)
     {
         $this->authorize('create', Consumable::class);
         $consumable = new Consumable;
         $consumable->fill($request->all());
+        $consumable = $request->handleImages($consumable);
 
         if ($consumable->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', $consumable, trans('admin/consumables/message.create.success')));
@@ -125,16 +157,17 @@ class ConsumablesController extends Controller
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
      * @since [v4.0]
-     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Http\Requests\ImageUploadRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ImageUploadRequest $request, $id)
     {
         $this->authorize('update', Consumable::class);
         $consumable = Consumable::findOrFail($id);
         $consumable->fill($request->all());
-
+        $consumable = $request->handleImages($consumable);
+        
         if ($consumable->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', $consumable, trans('admin/consumables/message.update.success')));
         }

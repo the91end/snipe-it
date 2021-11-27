@@ -46,7 +46,10 @@ class Helper
     public static function formatCurrencyOutput($cost)
     {
         if (is_numeric($cost)) {
-            return number_format($cost, 2, '.', '');
+            if (Setting::getSettings()->digit_separator=='1.234,56') {
+                return number_format($cost, 2, ',', '.');
+            }
+            return number_format($cost, 2, '.', ',');
         }
         // It's already been parsed.
         return $cost;
@@ -64,7 +67,7 @@ class Helper
     {
         $colors = [
             "#008941",
-            "#FF4A46",
+            "#FF851B",
             "#006FA6",
             "#A30059",
             "#1CE6FF",
@@ -400,6 +403,19 @@ class Helper
      */
     public static function ParseFloat($floatString)
     {
+        /*******
+         * 
+         * WARNING: This does conversions based on *locale* - a Unix-ey-like thing.
+         * 
+         * Everything else in the system tends to convert based on the Snipe-IT settings
+         * 
+         * So it's very likely this is *not* what you want - instead look for the new
+         * 
+         * ParseCurrency($currencyString)
+         * 
+         * Which should be directly below here
+         * 
+         */
         $LocaleInfo = localeconv();
         $floatString = str_replace(",", "", $floatString);
         $floatString = str_replace($LocaleInfo["decimal_point"], ".", $floatString);
@@ -412,6 +428,26 @@ class Helper
 
         $floatString = str_replace($currencySymbol, '', $floatString);
         return floatval($floatString);
+    }
+    
+    /**
+     * Format currency using comma or period for thousands, and period or comma for decimal, based on settings.
+     * 
+     * @author [B. Wetherington] [<bwetherington@grokability.com>]
+     * @since [v5.2]
+     * @return Float
+     */
+    public static function ParseCurrency($currencyString) {
+        $without_currency = str_replace(Setting::getSettings()->default_currency, '', $currencyString); //generally shouldn't come up, since we don't do this in fields, but just in case it does...
+        if(Setting::getSettings()->digit_separator=='1.234,56') {
+            //EU format
+            $without_thousands = str_replace('.', '', $without_currency);
+            $corrected_decimal = str_replace(',', '.', $without_thousands);
+        } else {
+            $without_thousands = str_replace(',', '', $without_currency);
+            $corrected_decimal = $without_thousands;  // decimal is already OK
+        }
+        return floatval($corrected_decimal);
     }
 
     /**
@@ -887,7 +923,8 @@ class Helper
             // If upload_max_size is less, then reduce. Except if upload_max_size is
             // zero, which indicates no limit.
             $upload_max = Helper::parse_size(ini_get('upload_max_filesize'));
-            if ($upload_max > 0 && $upload_max < $max_size) {
+
+            if ($upload_max > 0 && $upload_max < $post_max_size) {
                 $max_size = ini_get('upload_max_filesize');
             }
         }

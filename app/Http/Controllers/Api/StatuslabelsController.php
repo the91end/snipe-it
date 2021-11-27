@@ -71,6 +71,10 @@ class StatuslabelsController extends Controller
         $statuslabel->deployable        =  $statusType['deployable'];
         $statuslabel->pending           =  $statusType['pending'];
         $statuslabel->archived          =  $statusType['archived'];
+        $statuslabel->color             =  $request->input('color');
+        $statuslabel->show_in_nav       =  $request->input('show_in_nav', 0);
+        $statuslabel->default_label     =  $request->input('default_label', 0);
+
 
         if ($statuslabel->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', $statuslabel, trans('admin/statuslabels/message.create.success')));
@@ -111,9 +115,7 @@ class StatuslabelsController extends Controller
         
         $request->except('deployable', 'pending','archived');
 
-        if (!$request->filled('type')) {
-            return response()->json(Helper::formatStandardApiResponse('error', null, 'Status label type is required.'));
-        }
+
 
         $statuslabel->fill($request->all());
 
@@ -121,6 +123,9 @@ class StatuslabelsController extends Controller
         $statuslabel->deployable        =  $statusType['deployable'];
         $statuslabel->pending           =  $statusType['pending'];
         $statuslabel->archived          =  $statusType['archived'];
+        $statuslabel->color             =  $request->input('color');
+        $statuslabel->show_in_nav       =  $request->input('show_in_nav');
+        $statuslabel->default_label     =  $request->input('default_label');
 
         if ($statuslabel->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', $statuslabel, trans('admin/statuslabels/message.update.success')));
@@ -176,7 +181,6 @@ class StatuslabelsController extends Controller
 
         foreach ($statuslabels as $statuslabel) {
             if ($statuslabel->assets_count > 0) {
-
                 $labels[]=$statuslabel->name. ' ('.number_format($statuslabel->assets_count).')';
                 $points[]=$statuslabel->assets_count;
 
@@ -184,8 +188,8 @@ class StatuslabelsController extends Controller
                     $colors_array[] = $statuslabel->color;
                 } else {
                     $colors_array[] = Helper::defaultChartColors($default_color_count);
-                    $default_color_count++;
                 }
+                $default_color_count++;
             }
         }
 

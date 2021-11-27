@@ -138,7 +138,7 @@ class AssetsController extends Controller
             $asset->depreciate              = '0';
             $asset->status_id               = request('status_id', 0);
             $asset->warranty_months         = request('warranty_months', null);
-            $asset->purchase_cost           = Helper::ParseFloat($request->get('purchase_cost'));
+            $asset->purchase_cost           = Helper::ParseCurrency($request->get('purchase_cost'));
             $asset->purchase_date           = request('purchase_date', null);
             $asset->assigned_to             = request('assigned_to', null);
             $asset->supplier_id             = request('supplier_id', 0);
@@ -196,7 +196,7 @@ class AssetsController extends Controller
                 }
 
                 if (isset($target)) {
-                    $asset->checkOut($target, Auth::user(), date('Y-m-d H:i:s'), $request->input('expected_checkin', null), 'Checked out on asset creation', e($request->get('name')), $location);
+                    $asset->checkOut($target, Auth::user(), date('Y-m-d H:i:s'), $request->input('expected_checkin', null), 'Checked out on asset creation', $request->get('name'), $location);
                 }
 
                 $success = true;
@@ -302,7 +302,7 @@ class AssetsController extends Controller
 
         $asset->status_id = $request->input('status_id', null);
         $asset->warranty_months = $request->input('warranty_months', null);
-        $asset->purchase_cost = Helper::ParseFloat($request->input('purchase_cost', null));
+        $asset->purchase_cost = Helper::ParseCurrency($request->input('purchase_cost', null));
         $asset->purchase_date = $request->input('purchase_date', null);
         $asset->supplier_id = $request->input('supplier_id', null);
         $asset->expected_checkin = $request->input('expected_checkin', null);

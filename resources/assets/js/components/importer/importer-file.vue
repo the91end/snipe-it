@@ -141,6 +141,9 @@
                         {id: 'username', text: 'Username' },
                         {id: 'department', text: 'Department' },
                     ],
+                    accessories:[
+                        {id: 'model_number', text: 'Model Number'},
+                    ],
                     assets: [
                         {id: 'asset_tag', text: 'Asset Tag' },
                         {id: 'asset_model', text: 'Model Name' },
@@ -155,6 +158,7 @@
                     consumables: [
                         {id: 'item_no', text: "Item Number"},
                         {id: 'model_number', text: "Model Number"},
+                        {id: 'min_amt', text: "Minimum Quantity"},
                     ],
                     licenses: [
                         {id: 'asset_tag', text: 'Assigned To Asset'},
@@ -208,8 +212,12 @@
                             .concat(this.columnOptions.assets)
                             .concat(this.columnOptions.customFields)
                             .sort(sorter);
-
+                    case 'accessory':
+                        return this.columnOptions.general
+                            .concat(this.columnOptions.accessories)
+                            .sort(sorter);
                     case 'consumable':
+                    	console.log('Returned consumable');
                         return this.columnOptions.general
                             .concat(this.columnOptions.consumables)
                             .sort(sorter);

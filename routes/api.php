@@ -445,6 +445,20 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'auth:api']
             ]
         );
 
+        Route::post('{asset_id}/restore',
+            [
+                'as' => 'api.assets.restore',
+                'uses' => 'AssetsController@restore'
+            ]
+        );
+
+        Route::post('{asset_id}/destroy',
+            [
+                'as' => 'api.assets.destroy',
+                'uses' => 'AssetsController@destroy'
+            ]
+        );
+
     });
 
     /*--- Asset Maintenances API ---*/
@@ -887,6 +901,14 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'auth:api']
     Route::get(
         'reports/activity',
         [ 'as' => 'api.activity.index', 'uses' => 'ReportsController@index' ]
+    );
+
+    Route::get(
+        'reports/depreciation',
+        [ 
+            'as' => 'api.depreciation-report.index', 
+            'uses' => 'AssetsController@index' 
+        ]
     );
 
     /*--- Kits API ---*/
