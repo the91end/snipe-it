@@ -40,6 +40,7 @@ class ComponentsController extends Controller
                 'purchase_cost',
                 'qty',
                 'image',
+                'notes',
             ];
 
 
@@ -50,16 +51,24 @@ class ComponentsController extends Controller
             $components = $components->TextSearch($request->input('search'));
         }
 
+        if ($request->filled('name')) {
+            $components->where('name', '=', $request->input('name'));
+        }
+
         if ($request->filled('company_id')) {
-            $components->where('company_id','=',$request->input('company_id'));
+            $components->where('company_id', '=', $request->input('company_id'));
         }
 
         if ($request->filled('category_id')) {
-            $components->where('category_id','=',$request->input('category_id'));
+            $components->where('category_id', '=', $request->input('category_id'));
         }
 
         if ($request->filled('location_id')) {
-            $components->where('location_id','=',$request->input('location_id'));
+            $components->where('location_id', '=', $request->input('location_id'));
+        }
+
+        if ($request->filled('notes')) {
+            $components->where('notes','=',$request->input('notes'));
         }
 
         // Set the offset to the API call's offset, unless the offset is higher than the actual count of items in which
@@ -91,6 +100,7 @@ class ComponentsController extends Controller
 
         $total = $components->count();
         $components = $components->skip($offset)->take($limit)->get();
+
         return (new ComponentsTransformer)->transformComponents($components, $total);
     }
 
@@ -113,6 +123,7 @@ class ComponentsController extends Controller
         if ($component->save()) {
             return response()->json(Helper::formatStandardApiResponse('success', $component, trans('admin/components/message.create.success')));
         }
+
         return response()->json(Helper::formatStandardApiResponse('error', null, $component->getErrors()));
     }
 
@@ -132,7 +143,6 @@ class ComponentsController extends Controller
             return (new ComponentsTransformer)->transformComponent($component);
         }
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -172,6 +182,7 @@ class ComponentsController extends Controller
         $component = Component::findOrFail($id);
         $this->authorize('delete', $component);
         $component->delete();
+
         return response()->json(Helper::formatStandardApiResponse('success', null, trans('admin/components/message.delete.success')));
     }
 
@@ -195,6 +206,7 @@ class ComponentsController extends Controller
         $limit = $request->input('limit', 50);
         $total = $assets->count();
         $assets = $assets->skip($offset)->take($limit)->get();
+
         return (new ComponentsTransformer)->transformCheckedoutComponents($assets, $total);
     }
 

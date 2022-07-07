@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'sent'	        => 'Mật khẩu của bạn đã được gửi đi!',
-    'user'			=> 'Không tìn thấy người dùng được kích hoạt với email này.',
+    'sent'	        => 'If a matching user with a valid email address exists in our system, a password recovery email has been sent.',
+    'user'			=> 'If a matching user with a valid email address exists in our system, a password recovery email has been sent.',
+    'token'         => 'This password reset token is invalid or expired, or does not match the username provided.',
+    'reset'         => 'Your password has been reset!',
 ];
-

@@ -1,11 +1,12 @@
 <?php
 
-return array(
+return [
     'custom_fields'		        => 'Campi Personalizzati',
+    'manage'                    => 'Gestire',
     'field'		                => 'Campo',
     'about_fieldsets_title'		=> 'Fileldsets',
-    'about_fieldsets_text'		=> 'I Fieldsets ti permettono di creare gruppi di campi personalizzati che sono frequentemente riutilizzati per modelli specifici di asset.',
-    'custom_format'             => 'Formato personalizzato...',
+    'about_fieldsets_text'		=> 'I set di campi consentono di creare gruppi di campi personalizzati che vengono spesso riutilizzati per tipi di modelli di asset specifici.',
+    'custom_format'             => 'Formato Regex personalizzato...',
     'encrypt_field'      	        => 'Crittografare il valore di questo campo nel database',
     'encrypt_field_help'      => 'ATTENZIONE: Se il campo viene crittografato non sarà possibile cercarlo.',
     'encrypted'      	        => 'Crittografato',
@@ -26,7 +27,21 @@ return array(
     'used_by_models'   		    => 'Usato dai Modelli',
     'order'   		            => 'Ordine',
     'create_fieldset'         => 'Nuovo fieldset',
+    'create_fieldset_title' => 'Crea un nuovo fieldset',
     'create_field'            => 'Nuovo campo personalizzato',
+    'create_field_title' => 'Crea un nuovo campo personalizzato',
     'value_encrypted'      	        => 'Il valore di questo campo viene crittografato nel database. Solo gli utenti amministratori saranno in grado di visualizzare il valore decrittografato',
     'show_in_email'     => 'Includere il valore di questo campo nelle e-mail di checkout inviate all\'utente? I campi crittografati non possono essere inclusi nelle e-mail.',
-);
+    'help_text' => 'Testo guida',
+    'help_text_description' => 'Questo è un testo facoltativo che apparirà sotto gli elementi del modulo durante la modifica di una risorsa per fornire il contesto sul campo.',
+    'about_custom_fields_title' => 'Informazioni sui campi personalizzati',
+    'about_custom_fields_text' => 'I campi personalizzati consentono di aggiungere attributi arbitrari alle risorse.',
+    'add_field_to_fieldset' => 'Aggiungi campo a Fieldset',
+    'make_optional' => 'Obbligatorio: fare clic per renderlo opzionale',
+    'make_required' => 'Facoltativo: fare clic per renderlo obbligatorio',
+    'reorder' => 'Riordina',
+    'db_field' => 'Campo DB',
+    'db_convert_warning' => 'AVVERTIMENTO. Questo campo è nella tabella dei campi personalizzati come <code>:db_column</code> ma dovrebbe essere <code>:expected</code>.',
+    'is_unique' => 'Questo valore deve essere univoco per tutti i beni',
+    'unique' => 'Univoco',
+];

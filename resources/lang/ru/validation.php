@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -64,6 +64,7 @@ return array(
         'string'  => ':attribute должно быть не менее :min символов.',
         'array'   => 'Атрибут: должен содержать не менее: мин.',
     ],
+    'starts_with'          => ':attribute должен начинаться с одного из следующих значений: :values.',
     'not_in'               => 'Выбранный :attribute неправильный.',
     'numeric'              => ':attribute должно быть числом.',
     'present'              => 'Поле атрибута: должно присутствовать.',
@@ -88,8 +89,17 @@ return array(
     'unique'               => ':attribute уже занят.',
     'uploaded'             => 'Атрибут: не удалось загрузить.',
     'url'                  => 'Неправильный формат :attribute.',
-    "unique_undeleted"     => "Свойство :attribute должно быть уникальным.",
-    "non_circular"         => ":attribute не должен создавать циклическую ссылку.",
+    'unique_undeleted'     => 'Свойство :attribute должно быть уникальным.',
+    'non_circular'         => ':attribute не должен создавать циклическую ссылку.',
+    'disallow_same_pwd_as_user_fields' => 'Password cannot be the same as the username.',
+    'letters'              => 'Password must contain at least one letter.',
+    'numbers'              => 'Password must contain at least one number.',
+    'case_diff'            => 'Password must use mixed case.',
+    'symbols'              => 'Password must contain symbols.',
+    'gte'                  => [
+        'numeric'          => 'Value cannot be negative'
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -101,7 +111,6 @@ return array(
     | specify a specific custom language line for a given attribute rule.
     |
     */
-
 
     /*
     |--------------------------------------------------------------------------
@@ -115,11 +124,11 @@ return array(
     */
 
     'custom' => [
-        'alpha_space' => "Поле атрибута: содержит символ, который не разрешен.",
-        "email_array"      => "Один или несколько адресов электронной почты недействительны.",
-        "hashed_pass"      => "Ваш текущий пароль неверен",
+        'alpha_space' => 'Поле атрибута: содержит символ, который не разрешен.',
+        'email_array'      => 'Один или несколько адресов электронной почты недействительны.',
+        'hashed_pass'      => 'Ваш текущий пароль неверен',
         'dumbpwd'          => 'Этот пароль слишком распространен.',
-        "statuslabel_type" => "Вы должны выбрать допустимый тип метки статуса",
+        'statuslabel_type' => 'Вы должны выбрать допустимый тип метки статуса',
     ],
 
     /*
@@ -135,4 +144,4 @@ return array(
 
     'attributes' => [],
 
-);
+];
